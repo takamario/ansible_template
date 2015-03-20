@@ -1,0 +1,21 @@
+- name: Setup local environment
+  vars:
+    username: takamaru
+  hosts: local
+  #- include: web.yml
+  #- include: db.yml
+  #- include: batch.yml
+  roles:
+    - init
+    - vim
+    - nginx
+    - redis
+    - mysql
+    - user
+    - rbenv
+    - pyenv
+    - jdk
+    - nvm
+    - cs_tools
+    - jenkins
+    - tomcat

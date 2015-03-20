@@ -1,0 +1,21 @@
+- name: Download Amazon CloudSearch Command Line Tools
+  tags: cs_tools
+  get_url: url={{ cs_tools_tar_url }} dest=/tmp/cs_tools.tar.gz
+
+- name: Create cs_tools dir
+  tags: cs_tools
+  sudo: true
+  file: state=directory path=/usr/local/cloud-search-tools
+
+- name: Unzip cs_tools tar.gz
+  tags: cs_tools
+  sudo: true
+  unarchive: src=/tmp/cs_tools.tar.gz dest=/usr/local/cloud-search-tools copy=no
+
+- name: Add path for cs_tools
+  tags: cs_tools
+  lineinfile:
+    dest: ~/.bash_profile
+    line: "{{ item }}"
+  with_items:
+    - export PATH=$PATH:/usr/local/cloud-search-tools/{{ cs_tools_version_name }}/bin

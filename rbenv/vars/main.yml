@@ -1,0 +1,9 @@
+rbenv_repo_url: https://github.com/sstephenson/rbenv.git
+ruby_build_repo_url: https://github.com/sstephenson/ruby-build.git
+versions:
+  - 1.9.3-p551
+default_version: 1.9.3-p551
+gems:
+  - bundler
+  - padrino
+  - rails

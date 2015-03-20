@@ -1,0 +1,11 @@
+nvm_repo_url: https://github.com/creationix/nvm.git
+
+node_version: v0.12.0
+iojs_version: iojs-v1.4.3
+default_version: v0.12.0
+
+npm_packages:
+  - bower
+  - grunt-cli
+  - coffee-script
+  - jshint

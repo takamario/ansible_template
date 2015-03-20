@@ -1,0 +1,32 @@
+- name: Download jenkins repo
+  tags: jenkins
+  sudo: true
+  get_url: url={{ jenkins_repo_url }} dest=/etc/yum.repos.d/jenkins.repo
+
+- name: Install jenkins rpm key
+  tags: jenkins
+  sudo: true
+  rpm_key: key={{ jenkins_rpm_key_url }} state=present
+
+- name: Install jenkins
+  tags: jenkins
+  sudo: true
+  yum: name=jenkins state=latest
+
+- name: Change JENKINS_PORT
+  tags: jenkins
+  sudo: true
+  replace:
+    dest: /etc/sysconfig/jenkins
+    regexp: "{{ item.regexp }}"
+    replace: "{{ item.replace }}"
+  with_items:
+    - regexp: '^JENKINS_PORT="8080"$'
+      replace: 'JENKINS_PORT="{{ jenkins_port }}"'
+    - regexp: '^JENKINS_AJP_PORT="8009"$'
+      replace: 'JENKINS_AJP_PORT=-1'
+
+- name: Restart Jenkins
+  tags: jenkins
+  sudo: true
+  service: name=jenkins state=restarted enabled=yes

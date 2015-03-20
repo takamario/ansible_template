@@ -1,0 +1,91 @@
+- name: Add alias
+  tags: yum
+  sudo: true
+  lineinfile:
+    dest: /etc/yum/pluginconf.d/fastestmirror.conf
+    line: "{{ item }}"
+  with_items:
+    - include_only=.jp
+
+- name: Install epel repo
+  sudo: true
+  tags: yum
+  yum: name={{ epel_repo_url }} state=present
+
+- name: Update yum
+  sudo: true
+  tags: yum
+  yum: name=* state=latest
+
+- name: Install Essentials
+  sudo: true
+  tags: yum
+  yum: name={{ item }} state=latest
+  with_items: yum_packages
+
+- name: Install nkf
+  sudo: true
+  tags: yum
+  yum: name={{ nkf_repo_url }} state=present
+
+- name: Install ag
+  sudo: true
+  tags: yum
+  yum: name=the_silver_searcher state=latest
+
+- name: Put rc files
+  tags: rc
+  copy:
+    src={{ item }}
+    dest=~/.{{ item }}
+  with_items: rc_files
+
+- name: Create ssh key
+  tags: ssh
+  user: name=vagrant state=present generate_ssh_key=yes
+
+- name: Add alias
+  tags: rc
+  lineinfile:
+    dest: ~/.bash_profile
+    line: "{{ item }}"
+  with_items:
+    - '# Alias'
+    - alias vi='vim'
+    - alias view='vim -R'
+    - alias be='bundle exec'
+
+- name: Download git-completion and git-prompt
+  tags: rc
+  sudo: true
+  get_url: url={{ item }} dest=/etc/bash_completion.d/
+  with_items: git_contrib_repo_urls
+
+- name: Remove old git completion
+  tags: rc
+  sudo: true
+  file: name=/etc/bash_completion.d/git state=absent
+
+- name: Add prompt
+  tags: rc
+  lineinfile:
+    dest: ~/.bash_profile
+    line: "{{item}}"
+  with_items:
+    - '# git'
+    - PS1='[\u:\W$(__git_ps1 "(%s)")]$ '
+
+- name: Turn selinux off
+  tags: selinux
+  sudo: true
+  selinux: state=disabled
+
+- name: Install pip to system python
+  tags: system_python
+  shell: curl {{ pip_installer_url }} | sudo python
+
+- name: Install pip packages for ansible
+  tags: system_python
+  sudo: true
+  pip: name={{ item }} state=present
+  with_items: pip_packages

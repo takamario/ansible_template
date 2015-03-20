@@ -1,0 +1,37 @@
+- name: Install pyenv
+  tags: pyenv
+  git:
+    repo: "{{ pyenv_repo_url }}"
+    dest: ~/.pyenv
+
+- name: Add pyenv path
+  tags: pyenv
+  lineinfile:
+    dest: ~/.bash_profile
+    line: export PATH="$HOME/.pyenv/bin:$PATH"
+
+- name: Add init pyenv
+  tags: pyenv
+  lineinfile:
+    dest: ~/.bash_profile
+    line: "{{ item }}"
+  with_items:
+    - '# pyenv'
+    - eval "$(pyenv init -)"
+
+- name: Install python (skip if exists)
+  tags: pyenv
+  shell: source ~/.bash_profile && pyenv install -s {{ item }}
+  with_items: versions
+
+- name: pyenv rehash
+  tags: pyenv
+  shell: source ~/.bash_profile && pyenv rehash
+
+- name: switch globally
+  tags: pyenv
+  shell: source ~/.bash_profile && pyenv global {{ default_version }}
+
+- name: Install pip
+  tags: pyenv
+  shell: source ~/.bash_profile && curl {{ pip_installer_url }} | python

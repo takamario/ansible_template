@@ -1,0 +1,53 @@
+- name: Install rbenv
+  tags: rbenv
+  git:
+    repo: "{{ rbenv_repo_url }}"
+    dest: ~/.rbenv
+
+- name: Add rbenv path
+  tags: rbenv
+  lineinfile:
+    dest: ~/.bash_profile
+    line: export PATH="$HOME/.rbenv/bin:$PATH"
+
+- name: Add init rbenv
+  tags: rbenv
+  lineinfile:
+    dest: ~/.bash_profile
+    line: "{{ item }}"
+  with_items:
+    - '# rbenv'
+    - eval "$(rbenv init -)"
+
+- name: Create ruby-build dir
+  tags: rbenv
+  file:
+    path: ~/.rbenv/plugins
+    state: directory
+
+- name: Install ruby-build
+  tags: rbenv
+  git:
+    repo: "{{ ruby_build_repo_url }}"
+    dest: ~/.rbenv/plugins/ruby-build
+
+- name: Install ruby (skip if exists)
+  tags: rbenv
+  shell: source ~/.bash_profile && rbenv install -s {{ item }}
+  with_items: versions
+
+- name: rbenv rehash
+  tags: rbenv
+  shell: source ~/.bash_profile && rbenv rehash
+
+- name: switch globally
+  tags: rbenv
+  shell: source ~/.bash_profile && rbenv global {{ default_version }}
+
+- name: Install gems
+  tags: rbenv
+  gem:
+    executable: "~/.rbenv/versions/{{ default_version }}/bin/gem"
+    name: "{{ item }}"
+    state: present
+  with_items: gems

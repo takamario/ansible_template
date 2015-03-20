@@ -1,0 +1,9 @@
+pyenv_repo_url: https://github.com/yyuu/pyenv.git
+
+versions:
+  - 2.6.9
+  - 2.7.9
+
+default_version: 2.7.9
+
+pip_installer_url: https://bootstrap.pypa.io/get-pip.py

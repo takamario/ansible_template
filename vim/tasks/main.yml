@@ -1,0 +1,14 @@
+- name: Install NeoBundle
+  tags: vim
+  git:
+    repo: "{{ neobundle_repo_url }}"
+    dest: ~/.vim/bundle/neobundle.vim
+
+- name: Install vim modules
+  tags: vim
+  shell: 'vim -u ~/.vimrc -i NONE -e -s -c "try | NeoBundleInstall | finally | q! | endtry"'
+  ignore_errors: true
+
+- name: Put .vimrc
+  tags: vim
+  copy: src=vimrc dest=~/.vimrc

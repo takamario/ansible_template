@@ -1,0 +1,42 @@
+yum_packages:
+  - ImageMagick-devel
+  - autoconf
+  - automake
+  - bash-completion
+  - colordiff
+  - curl-devel
+  - gcc             # Ruby dependencies
+  - gcc-c++         # Ruby dependencies
+  - git
+  - libcurl-devel   # Ruby dependencies
+  - libxml2-devel   # Ruby dependencies
+  - libxslt-devel   # Ruby dependencies
+  - libyaml-devel   # Ruby dependencies
+  - mailx
+  - make
+  - ntp
+  - openssl-devel   # Ruby dependencies
+  - patch           # Ruby dependencies
+  - readline-devel  # Ruby dependencies
+  - s3cmd
+  - sysstat         # sar
+  - vim-enhanced
+  - zlib-devel      # Ruby dependencies
+
+nkf_repo_url: http://mirror.centos.org/centos/6/os/x86_64/Packages/nkf-2.0.8b-6.2.el6.x86_64.rpm
+
+epel_repo_url: http://download.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-5.noarch.rpm
+
+rc_files:
+  - gemrc
+  - gitconfig
+  - vimrc
+
+git_contrib_repo_urls:
+  - https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.bash
+  - https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh
+
+pip_installer_url: https://bootstrap.pypa.io/get-pip.py
+pip_packages:
+  - httplib2
+  - urlparse2

@@ -1,0 +1,61 @@
+#- name: Downloads java rpm
+#  tags: jdk
+#  shell: "wget -nc -O /tmp/jdk.rpm --no-cookies --no-check-certificate --header '{{ cookie_val }}' {{ jdk_repo_url }} || true"
+
+- name: Downloads java rpm
+  tags: jdk
+  uri:
+    dest: /tmp/jdk.rpm
+    HEADER_Cookie: "{{ cookie_val }}"
+    url: "{{ jdk_repo_url }}"
+
+- name: Install jdk
+  sudo: true
+  tags: jdk
+  yum: name=/tmp/jdk.rpm state=present
+
+- name: Add JAVA_HOME
+  tags: jdk
+  lineinfile:
+    dest: ~/.bash_profile
+    line: "{{ item }}"
+  with_items:
+    - export JAVA_HOME=/usr/java/default
+
+- name: Add alternatives
+  tags: jdk
+  sudo: true
+  shell: alternatives --install /usr/bin/{{ item }} {{ item }} /usr/java/{{ default_version }}/bin/{{ item }} 2
+  with_items:
+    - java
+    - javac
+
+- name: Set default java
+  tags: jdk
+  sudo: true
+  shell: alternatives --set {{ item }} /usr/java/{{ default_version }}/bin/{{ item }}
+  with_items:
+    - java
+    - javac
+
+- name: Download maven
+  tags: maven
+  get_url: url={{ maven_tar_url }} dest=/tmp/maven.tar.gz
+
+- name: Create maven dir
+  tags: maven
+  sudo: true
+  file: path=/usr/local/apache-maven state=directory
+
+- name: Extract maven.tar.gz
+  tags: maven
+  sudo: true
+  unarchive: src=/tmp/maven.tar.gz dest=/usr/local/apache-maven copy=no
+
+- name: Add path to maven
+  tags: maven
+  lineinfile:
+    dest: ~/.bash_profile
+    line: "{{ item }}"
+  with_items:
+    - export PATH=$PATH:/usr/local/apache-maven/{{ maven_verson_name }}/bin
