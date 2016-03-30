@@ -1,0 +1,18 @@
+[user]
+  name = Shoei Takamaru
+  email = shoei.takamaru@gmail.com
+[core]
+  editor = vim
+  autocrlf = input
+[alias]
+  co = checkout
+  ci = commit -a
+  st = status
+  br = branch
+  pick = cherry-pick
+  lg = log --abbrev-commit --relative-date --decorate --pretty
+  lgg = log --abbrev-commit --relative-date --decorate --pretty --graph
+[color]
+  ui = auto
+[push]
+  default = simple

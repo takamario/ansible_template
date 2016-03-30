@@ -1,0 +1,97 @@
+- name: Put gemrc to /etc
+  sudo: true
+  tags: rbenv
+  copy:
+    src: gemrc
+    dest: "/etc/gemrc"
+
+- name: Install rbenv in Local
+  tags: rbenv
+  git:
+    repo: "{{ rbenv_repo_url }}"
+    dest: "~/.rbenv"
+
+- name: Add rbenv path in CentOS
+  when: ansible_distribution == "CentOS"
+  tags: rbenv
+  lineinfile:
+    dest: "~/.bash_profile"
+    line: "{{ item }}"
+  with_items:
+    - '# rbenv'
+    - export RBENV_ROOT=$HOME/.rbenv
+    - export PATH="$RBENV_ROOT/bin:$PATH"
+
+- name: Add rbenv path in Ubuntu
+  when: ansible_distribution == "Ubuntu"
+  tags: rbenv
+  lineinfile:
+    dest: "~/.profile"
+    line: "{{ item }}"
+  with_items:
+    - '# rbenv'
+    - export RBENV_ROOT=$HOME/.rbenv
+    - export PATH="$RBENV_ROOT/bin:$PATH"
+
+- name: Add init rbenv in CentOS
+  when: ansible_distribution == "CentOS"
+  tags: rbenv
+  lineinfile:
+    dest: "~/.bash_profile"
+    line: "{{ item }}"
+  with_items:
+    - eval "$(rbenv init -)"
+
+- name: Add init rbenv in Ubuntu
+  when: ansible_distribution == "Ubuntu"
+  tags: rbenv
+  lineinfile:
+    dest: "~/.profile"
+    line: "{{ item }}"
+  with_items:
+    - eval "$(rbenv init -)"
+
+- name: Create ruby-build dir in Local
+  tags: rbenv
+  file:
+    path: "~/.rbenv/plugins"
+    state: directory
+
+- name: Install ruby-build in Local
+  tags: rbenv
+  git:
+    repo: "{{ ruby_build_repo_url }}"
+    dest: "~/.rbenv/plugins/ruby-build"
+
+- name: Install ruby in CentOS 6
+  when: ansible_distribution_major_version|int == 6 and ansible_distribution == "CentOS"
+  tags: rbenv
+  shell: bash -lc "rbenv install -s {{ current_version }}"
+
+- name: Install ruby in CentOS 7 or Ubuntu
+  when: ansible_distribution_major_version|int == 7 or ansible_distribution == "Ubuntu"
+  tags: rbenv
+  shell: bash -lc "rbenv install -s {{ latest_version }}"
+
+- name: rbenv rehash in Local
+  tags: rbenv
+  shell: bash -lc "rbenv rehash"
+
+- name: switch globally in CentOS 6
+  when: ansible_distribution_major_version|int == 6 and ansible_distribution == "CentOS"
+  tags: rbenv
+  shell: bash -lc "rbenv global {{ current_version }}"
+
+- name: switch globally in CentOS 7 or Ubuntu
+  when: ansible_distribution_major_version|int == 7 or ansible_distribution == "Ubuntu"
+  tags: rbenv
+  shell: bash -lc "rbenv global {{ latest_version }}"
+
+- name: Install gems in Local
+  tags: rbenv
+  shell: bash -lc "gem install {{ item }}"
+  with_items: gems
+
+- name: rbenv rehash in Local
+  tags: rbenv
+  shell: bash -lc "rbenv rehash"

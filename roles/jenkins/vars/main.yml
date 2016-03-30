@@ -1,0 +1,73 @@
+jenkins_repo_url: http://pkg.jenkins-ci.org/redhat-stable/jenkins.repo
+jenkins_rpm_key_url: http://pkg.jenkins-ci.org/redhat-stable/jenkins-ci.org.key
+jenkins_apt_key_url: https://jenkins-ci.org/debian/jenkins-ci.org.key
+jenkins_port: 18080
+
+jenkins_cli_download_url: http://localhost:18080/jnlpJars/jenkins-cli.jar
+
+jenkins_cli_path: /var/lib/jenkins/jenkins-cli.jar
+jenkins_url: http://localhost:18080/
+
+jenkins_plugins:
+  - analysis-core
+  - ansicolor
+  - ant
+  - antisamy-markup-formatter
+  - artifactory
+  - backlog
+  - checkstyle
+  - copyartifact
+  - credentials
+  - cvs
+  - deploy
+  - doclinks
+  - email-ext
+  - emotional-jenkins-plugin
+  - external-monitor-job
+  - extra-columns
+  - git
+  - git-client
+  - git-parameter
+  - git-server
+  - github
+  - github-api
+  - github-oauth
+  - greenballs
+  - javadoc
+  - jira
+  - jobConfigHistory
+  - jquery
+  - ldap
+  - mailer
+  - mapdb-api
+  - mask-passwords
+  - matrix-auth
+  - matrix-project
+  - maven-plugin
+  - monitoring
+  - nodejs
+  - pam-auth
+  - parameterized-trigger
+  - plot
+  - pmd
+  - pry
+  - rake
+  - rbenv
+  - repository
+  - ruby
+  - ruby-runtime
+  - rubyMetrics
+  - s3
+  - scm-api
+  - sidebar-link
+  - simple-theme-plugin
+  - sitemonitor
+  - slack
+  - sonar
+  - ssh-credentials
+  - ssh-slaves
+  - subversion
+  - token-macro
+  - translation
+  - windows-slaves
+  - ws-cleanup

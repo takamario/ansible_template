@@ -1,0 +1,10 @@
+mariadb_packages:
+  - mariadb-libs
+
+mysql_yum_packages:
+  - mysql-community-server
+  - mysql-devel
+
+mysql_apt_packages:
+  - mysql-server
+  - mysql-client

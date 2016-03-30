@@ -1,0 +1,68 @@
+- name: Download go
+  tags: go
+  get_url: url={{ go_tar_url }} dest=/tmp/go.tar.gz
+
+- name: Extract go.tar.gz
+  tags: go
+  sudo: true
+  unarchive: src=/tmp/go.tar.gz dest=/usr/local copy=no
+
+- name: Add Path to Go in CentOS
+  tags: go
+  when: ansible_distribution == "CentOS"
+  lineinfile:
+    dest: ~/.bash_profile
+    line: "{{ item }}"
+  with_items:
+    - "# Go"
+    - export GOROOT=/usr/local/go
+    - export GOPATH=$GOROOT/packages
+    - export PATH=$PATH:$GOROOT/bin
+
+- name: Add Path to Go in Ubuntu
+  tags: go
+  when: ansible_distribution == "Ubuntu"
+  lineinfile:
+    dest: ~/.profile
+    line: "{{ item }}"
+  with_items:
+    - "# Go"
+    - export GOROOT=/usr/local/go
+    - export GOPATH=$GOROOT/packages
+    - export PATH=$PATH:$GOROOT/bin
+
+- name: Create a directory for go packages
+  tags: go
+  sudo: true
+  file: path=/usr/local/go/packages state=directory
+
+- name: Install gocode
+  tags: go
+  sudo: true
+  shell: 'GOPATH=/usr/local/go/packages /usr/local/go/bin/go get -u github.com/nsf/gocode'
+
+- name: Check gocode symlinks
+  tags: go
+  shell: test -h ~/.vim/autoload/gocomplete.vim ; echo $?
+  register: gocode_symlink_created
+  ignore_errors: true
+
+- name: Configure gocode
+  tags: go
+  when: gocode_symlink_created.stdout == '1'
+  shell: 'bash -lc "/usr/local/go/packages/src/github.com/nsf/gocode/vim/symlink.sh"'
+
+- name: Install golint
+  tags: go
+  sudo: true
+  shell: 'GOPATH=/usr/local/go/packages /usr/local/go/bin/go get -u github.com/golang/lint'
+
+- name: Install godef
+  tags: go
+  sudo: true
+  shell: 'GOPATH=/usr/local/go/packages /usr/local/go/bin/go get -u code.google.com/p/rog-go/exp/cmd/godef'
+
+- name: Install godoc
+  tags: go
+  sudo: true
+  shell: 'GOPATH=/usr/local/go/packages /usr/local/go/bin/go get -u golang.org/x/tools/cmd/godoc'

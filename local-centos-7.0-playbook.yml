@@ -1,0 +1,15 @@
+- name: Setup local environment
+  hosts: local-centos-7.0
+  roles:
+    - init
+    - vim
+    - nginx
+    - redis
+    - mysql
+    - rbenv
+    - pyenv
+    - jdk
+    - nvm
+    - jenkins
+    #- tomcat
+    - go

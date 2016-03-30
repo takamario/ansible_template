@@ -1,0 +1,7 @@
+username: takamaru
+password: $6$rounds=100000$uRDKDm8xHblgi6/J$M9JdfUd1bTdylX46iplNRRWDOwYaP9OfeoF3bNjxYUlfbVCvpWtLQBpq4jOkGk6/GNh0ZI9VGPKMOyCqrOm4C1
+
+nginx_conf_files:
+  - host1.conf
+
+mysql_repo_url: http://dev.mysql.com/get/mysql-apt-config_0.3.5-1ubuntu14.10_all.deb

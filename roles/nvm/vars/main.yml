@@ -1,0 +1,12 @@
+nvm_repo_url: https://github.com/creationix/nvm.git
+
+node_version: v4.4.1
+default_version: v4.4.1
+
+npm_packages:
+  - bower
+  - grunt-cli
+  - coffee-script
+  - eslint
+  - gulp
+  - js-beautify

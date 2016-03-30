@@ -1,0 +1,1 @@
+local-centos-7.0 ansible_ssh_host=hogehoge-centos-7.0

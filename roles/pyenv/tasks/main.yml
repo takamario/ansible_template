@@ -1,0 +1,79 @@
+- name: Install pyenv in Local
+  tags: pyenv
+  git:
+    repo: "{{ pyenv_repo_url }}"
+    dest: "~/.pyenv"
+
+- name: Add pyenv path in CentOS
+  when: ansible_distribution == "CentOS"
+  tags: pyenv
+  lineinfile:
+    dest: "~/.bash_profile"
+    line: "{{ item }}"
+  with_items:
+    - '# pyenv'
+    - export PYENV_ROOT=$HOME/.pyenv
+    - export PATH="$PYENV_ROOT/bin:$PATH"
+
+- name: Add pyenv path in Ubuntu
+  when: ansible_distribution == "Ubuntu"
+  tags: pyenv
+  lineinfile:
+    dest: "~/.profile"
+    line: "{{ item }}"
+  with_items:
+    - '# pyenv'
+    - export PYENV_ROOT=$HOME/.pyenv
+    - export PATH="$PYENV_ROOT/bin:$PATH"
+
+- name: Add init pyenv in CentOS
+  when: ansible_distribution == "CentOS"
+  tags: pyenv
+  lineinfile:
+    dest: "~/.bash_profile"
+    line: "{{ item }}"
+  with_items:
+    - eval "$(pyenv init -)"
+
+- name: Add init pyenv in Ubuntu
+  when: ansible_distribution == "Ubuntu"
+  tags: pyenv
+  lineinfile:
+    dest: "~/.profile"
+    line: "{{ item }}"
+  with_items:
+    - eval "$(pyenv init -)"
+
+- name: Install python in CentOS 6
+  when: ansible_distribution_major_version|int == 6 and ansible_distribution == "CentOS"
+  tags: pyenv
+  shell: bash -lc "pyenv install -s {{ item }}"
+  with_items: versions
+
+- name: Install python in CentOS 7 or Ubuntu
+  when: ansible_distribution_major_version|int == 7 or ansible_distribution == "Ubuntu"
+  tags: pyenv
+  shell: bash -lc "pyenv install -s {{ item }}"
+  with_items: versions
+
+- name: pyenv rehash in Local
+  tags: pyenv
+  shell: bash -lc "pyenv rehash"
+
+- name: switch globally in centos 6
+  when: ansible_distribution_major_version|int == 6 and ansible_distribution == "CentOS"
+  tags: pyenv
+  shell: bash -lc "pyenv global {{ default_version }}"
+
+- name: switch globally in centos 7 or Ubuntu
+  when: ansible_distribution_major_version|int == 7 or ansible_distribution == "Ubuntu"
+  tags: pyenv
+  shell: bash -lc "pyenv global {{ default_version }}"
+
+- name: Install pip
+  tags: pyenv
+  shell: bash -lc "curl {{ pip_installer_url }} | python"
+
+- name: Install pip packages
+  tags: pyenv
+  shell: bash -lc "pip install awscli"

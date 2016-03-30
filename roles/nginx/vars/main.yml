@@ -1,0 +1,2 @@
+nginx_dependencies:
+  - pcre-devel

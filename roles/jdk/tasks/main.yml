@@ -1,0 +1,108 @@
+#- name: Downloads java rpm
+#  tags: jdk
+#  shell: "wget -nc -O /tmp/jdk.rpm --no-cookies --no-check-certificate --header '{{ cookie_val }}' {{ jdk_repo_url }} || true"
+
+- name: Downloads java rpm
+  when: ansible_distribution == "CentOS"
+  tags: jdk
+  uri:
+    dest: /tmp/jdk.rpm
+    HEADER_Cookie: "{{ cookie_val }}"
+    url: "{{ jdk_repo_url }}"
+
+- name: Add apt-repository for jdk
+  when: ansible_distribution == "Ubuntu"
+  sudo: true
+  tags: jdk
+  apt_repository: repo=ppa:webupd8team/java state=present
+
+- name: Install jdk via yum
+  when: ansible_distribution == "CentOS"
+  sudo: true
+  tags: jdk
+  yum: name=/tmp/jdk.rpm state=present
+
+- name: Accept oracle-license in Ubuntu
+  when: ansible_distribution == "Ubuntu"
+  tags: jdk
+  shell: echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | sudo /usr/bin/debconf-set-selections
+
+- name: Install jdk via apt
+  when: ansible_distribution == "Ubuntu"
+  sudo: true
+  tags: jdk
+  apt: name=oracle-java8-installer state=present update_cache=yes
+
+- name: Add JAVA_HOME in CentOS
+  when: ansible_distribution == "CentOS"
+  tags: jdk
+  lineinfile:
+    dest: ~/.bash_profile
+    line: "{{ item }}"
+  with_items:
+    - "# Java"
+    - export JAVA_HOME=/usr/java/default
+
+- name: Set default in Ubuntu (Adding JAVA_HOME)
+  when: ansible_distribution == "Ubuntu"
+  tags: jdk
+  sudo: true
+  apt: name=oracle-java8-set-default state=present update_cache=yes
+
+- name: Add alternatives in CentOS
+  when: ansible_distribution == "CentOS"
+  tags: jdk
+  sudo: true
+  shell: alternatives --install /usr/bin/{{ item }} {{ item }} /usr/java/{{ default_version }}/bin/{{ item }} 2
+  with_items:
+    - java
+    - javac
+
+- name: Set default java in CentOS
+  when: ansible_distribution == "CentOS"
+  tags: jdk
+  sudo: true
+  shell: alternatives --set {{ item }} /usr/java/{{ default_version }}/bin/{{ item }}
+  with_items:
+    - java
+    - javac
+
+- name: Set default java in Ubuntu
+  when: ansible_distribution == "Ubuntu"
+  tags: jdk
+  sudo: true
+  shell: update-java-alternatives -s java-8-oracle
+
+- name: Download maven
+  tags: maven
+  get_url: url={{ maven_tar_url }} dest=/tmp/maven.tar.gz
+
+- name: Create maven dir
+  tags: maven
+  sudo: true
+  file: path=/usr/local/apache-maven state=directory
+
+- name: Extract maven.tar.gz
+  tags: maven
+  sudo: true
+  unarchive: src=/tmp/maven.tar.gz dest=/usr/local/apache-maven copy=no
+
+- name: Add path to maven in CentOS
+  when: ansible_distribution == "CentOS"
+  tags: maven
+  lineinfile:
+    dest: ~/.bash_profile
+    line: "{{ item }}"
+  with_items:
+    - "# Maven"
+    - export PATH=$PATH:/usr/local/apache-maven/{{ maven_verson_name }}/bin
+
+- name: Add path to maven in Ubuntu
+  when: ansible_distribution == "Ubuntu"
+  tags: maven
+  lineinfile:
+    dest: ~/.profile
+    line: "{{ item }}"
+  with_items:
+    - "# Maven"
+    - export PATH=$PATH:/usr/local/apache-maven/{{ maven_verson_name }}/bin

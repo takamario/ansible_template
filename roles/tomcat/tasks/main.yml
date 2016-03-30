@@ -1,0 +1,57 @@
+- name: Downloads tomcat source
+  tags: tomcat
+  get_url: url={{ tomcat_tar_gz_url }} dest=/tmp/tomcat.tar.gz
+
+- name: Create tomcat dir
+  tags: tomcat
+  sudo: true
+  file: path=/usr/local/apache-tomcat state=directory
+
+- name: Extract tomcat.tar.gz
+  tags: tomcat
+  sudo: true
+  unarchive: src=/tmp/tomcat.tar.gz dest=/usr/local/apache-tomcat copy=no
+
+- name: Add CATALINA_HOME
+  tags: tomcat
+  lineinfile:
+    dest: ~/.bash_profile
+    line: "{{ item }}"
+  with_items:
+    - export CATALINA_HOME=/usr/local/apache-tomcat/{{ tomcat_version_name }}
+
+- name: Extract common-daemon
+  tags: tomcat
+  sudo: true
+  unarchive: >
+    src=/usr/local/apache-tomcat/{{ tomcat_version_name }}/bin/commons-daemon-native.tar.gz
+    dest=/usr/local/apache-tomcat/{{ tomcat_version_name }}/bin
+    copy=no
+
+- name: Compile jsvc
+  tags: tomcat
+  sudo: true
+  shell: "{{ item }}"
+  with_items:
+    - cd /usr/local/apache-tomcat/{{ tomcat_version_name }}/bin/commons-daemon-1.0.15-native-src/unix && ./configure --with-java=/usr/java/default
+    - cd /usr/local/apache-tomcat/{{ tomcat_version_name }}/bin/commons-daemon-1.0.15-native-src/unix && make
+
+- name: Copy jsvc
+  tags: tomcat
+  sudo: true
+  shell: cp /usr/local/apache-tomcat/{{ tomcat_version_name }}/bin/commons-daemon-1.0.15-native-src/unix/jsvc /usr/local/apache-tomcat/{{ tomcat_version_name }}/bin
+
+- name: Put Service Scripts
+  tags: tomcat
+  sudo: true
+  copy:
+    src: "{{ inventory_hostname }}/{{ item }}"
+    dest: "/etc/init.d/{{ item }}"
+    mode: 0755
+  with_items: tomcat_services
+
+- name: Add tomcat to service
+  tags: tomcat
+  sudo: true
+  service: name={{ item }} state=restarted enabled=yes
+  with_items: tomcat_services

@@ -1,0 +1,7 @@
+rbenv_repo_url: https://github.com/sstephenson/rbenv.git
+ruby_build_repo_url: https://github.com/sstephenson/ruby-build.git
+current_version: 2.2.3
+latest_version: 2.3.0
+gems:
+  - bundler
+  - rbenv-rehash

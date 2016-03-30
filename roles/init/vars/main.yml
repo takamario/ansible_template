@@ -1,0 +1,79 @@
+yum_packages:
+  - ImageMagick-devel
+  - autoconf
+  - automake
+  - bash-completion
+  - bind-utils        # nslookup, dig
+  - colordiff
+  - curl-devel
+  - gcc               # Ruby dependencies
+  - gcc-c++           # Ruby dependencies
+  - git
+  - libcurl-devel     # Ruby dependencies
+  - libffi-devel      # Ansible dependencies
+  - libselinux-python # SELinux
+  - libxml2-devel     # Ruby dependencies
+  - libxslt-devel     # Ruby dependencies
+  - libyaml-devel     # Ruby dependencies
+  - mailx
+  - make
+  - mercurial
+  - ntp
+  - openssl-devel     # Ruby dependencies
+  - patch             # Ruby dependencies
+  - python-devel      # Ansible dependencies
+  - readline-devel    # Ruby dependencies
+  - s3cmd
+  - sysstat           # sar
+  - unzip
+  - vim-enhanced
+  - zip
+  - zlib-devel        # Ruby dependencies
+
+apt_packages:
+  - autoconf          # Ruby dependencies
+  - bash-completion
+  - bison             # Ruby dependencies
+  - build-essential   # Ruby dependencies
+  - colordiff
+  - git
+  - libffi-dev        # Ruby dependencies
+  - libgdbm-dev       # Ruby dependencies
+  - libgdbm3          # Ruby dependencies
+  - libncurses5-dev   # Ruby dependencies
+  - libreadline6-dev  # Ruby dependencies
+  - libssl-dev        # Ruby dependencies
+  - libyaml-dev       # Ruby dependencies
+  - mercurial
+  - nkf
+  - ntp
+  - silversearcher-ag
+  - sysstat           # sar
+  - unzip
+  - vim
+  - zip
+  - zlib1g-dev        # Ruby dependencies
+
+centos_bash_profile: .bash_profile
+
+ubuntu_bash_profile: .profile
+
+nkf_repo_url: http://mirror.centos.org/centos/6/os/x86_64/Packages/nkf-2.0.8b-6.2.el6.x86_64.rpm
+
+ag_repo_url: http://swiftsignal.com/packages/centos/6/x86_64/the-silver-searcher-0.13.1-1.el6.x86_64.rpm
+
+rc_files:
+  - gemrc
+  - gitconfig
+  - vimrc
+
+git_contrib_repo_urls:
+  - https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.bash
+  - https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh
+
+pip_installer_url: https://bootstrap.pypa.io/get-pip.py
+pip_packages:
+  - httplib2
+  - urlparse2
+  - pyopenssl
+  - ansible
