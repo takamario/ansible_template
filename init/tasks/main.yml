@@ -1,6 +1,6 @@
 - name: Add alias
   tags: yum
-  sudo: true
+  become: true
   lineinfile:
     dest: /etc/yum/pluginconf.d/fastestmirror.conf
     line: "{{ item }}"
@@ -8,28 +8,28 @@
     - include_only=.jp
 
 - name: Install epel repo
-  sudo: true
+  become: true
   tags: yum
   yum: name={{ epel_repo_url }} state=present
 
 - name: Update yum
-  sudo: true
+  become: true
   tags: yum
   yum: name=* state=latest
 
 - name: Install Essentials
-  sudo: true
+  become: true
   tags: yum
   yum: name={{ item }} state=latest
   with_items: yum_packages
 
 - name: Install nkf
-  sudo: true
+  become: true
   tags: yum
   yum: name={{ nkf_repo_url }} state=present
 
 - name: Install ag
-  sudo: true
+  become: true
   tags: yum
   yum: name=the_silver_searcher state=latest
 
@@ -57,13 +57,13 @@
 
 - name: Download git-completion and git-prompt
   tags: rc
-  sudo: true
+  become: true
   get_url: url={{ item }} dest=/etc/bash_completion.d/
   with_items: git_contrib_repo_urls
 
 - name: Remove old git completion
   tags: rc
-  sudo: true
+  become: true
   file: name=/etc/bash_completion.d/git state=absent
 
 - name: Add prompt
@@ -77,7 +77,7 @@
 
 - name: Turn selinux off
   tags: selinux
-  sudo: true
+  become: true
   selinux: state=disabled
 
 - name: Install pip to system python
@@ -86,6 +86,6 @@
 
 - name: Install pip packages for ansible
   tags: system_python
-  sudo: true
+  become: true
   pip: name={{ item }} state=present
   with_items: pip_packages

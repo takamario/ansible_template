@@ -1,29 +1,29 @@
 - name: Install Redis Repo with RPM
   when: ansible_distribution == "CentOS"
   tags: redis
-  sudo: true
+  become: true
   yum: name={{ epel_repo_url }} state=present
 
 - name: Install Redis via yum
   when: ansible_distribution == "CentOS"
   tags: redis
-  sudo: true
+  become: true
   yum: name=redis state=latest
 
 - name: Install Redis via apt
   when: ansible_distribution == "Ubuntu"
   tags: redis
-  sudo: true
+  become: true
   apt: name=redis-server state=latest update_cache=yes
 
 - name: Turn redis service on
   when: ansible_distribution == "CentOS"
   tags: redis
-  sudo: true
+  become: true
   service: name=redis state=restarted enabled=yes
 
 - name: Turn redis service on
   when: ansible_distribution == "Ubuntu"
   tags: redis
-  sudo: true
+  become: true
   service: name=redis-server state=restarted enabled=yes

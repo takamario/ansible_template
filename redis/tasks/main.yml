@@ -1,14 +1,14 @@
 - name: Install Redis Repo
   tags: redis
-  sudo: true
+  become: true
   yum: name={{ redis_repo_url }} state=present
 
 - name: Install Redis
   tags: redis
-  sudo: true
+  become: true
   yum: name=redis state=latest
 
 - name: Turn redis service on
   tags: redis
-  sudo: true
+  become: true
   service: name=redis state=restarted enabled=yes

@@ -1,44 +1,44 @@
 - name: Remove MariaDB
   when: ansible_distribution_major_version|int == 7 and ansible_distribution == "CentOS"
-  sudo: true
+  become: true
   tags: mysql
   yum: name={{ item }} state=absent
   with_items: mariadb_packages
 
 - name: Install MySQL repo via yum
   when: ansible_distribution == "CentOS"
-  sudo: true
+  become: true
   tags: mysql
   yum: name={{ mysql_repo_url }} state=present
 
 - name: Install MySQL via yum
   when: ansible_distribution == "CentOS"
-  sudo: true
+  become: true
   tags: mysql
   yum: name={{ item }} state=latest
   with_items: mysql_yum_packages
 
 - name: Install MySQL via apt
   when: ansible_distribution == "Ubuntu"
-  sudo: true
+  become: true
   tags: mysql
   apt: name={{ item }} state=latest update_cache=yes
   with_items: mysql_apt_packages
 
 - name: Turn mysql service on
   when: ansible_distribution_major_version|int == 7 and ansible_distribution == "CentOS"
-  sudo: true
+  become: true
   tags: mysql
   service: name=mysql state=restarted enabled=yes
 
 - name: Turn mysql service on
   when: ansible_distribution_major_version|int == 6 and ansible_distribution == "CentOS"
-  sudo: true
+  become: true
   tags: mysql
   service: name=mysqld state=restarted enabled=yes
 
 - name: Turn mysql service on
   when: ansible_distribution == "Ubuntu"
-  sudo: true
+  become: true
   tags: mysql
   service: name=mysql state=restarted enabled=yes

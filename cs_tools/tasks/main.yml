@@ -4,12 +4,12 @@
 
 - name: Create cs_tools dir
   tags: cs_tools
-  sudo: true
+  become: true
   file: state=directory path=/usr/local/cloud-search-tools
 
 - name: Unzip cs_tools tar.gz
   tags: cs_tools
-  sudo: true
+  become: true
   unarchive: src=/tmp/cs_tools.tar.gz dest=/usr/local/cloud-search-tools copy=no
 
 - name: Add path for cs_tools

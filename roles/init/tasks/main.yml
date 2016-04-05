@@ -1,56 +1,56 @@
 - name: Install epel 7 repo
   when: ansible_distribution_major_version|int == 7 and ansible_distribution == "CentOS"
-  sudo: true
+  become: true
   tags: yum
   yum: name={{ epel_repo_url }} state=present
 
 - name: Install epel 6 repo
   when: ansible_distribution_major_version|int == 6 and ansible_distribution == "CentOS"
-  sudo: true
+  become: true
   tags: yum
   yum: name={{ epel_repo_url }} state=present
 
 - name: Update yum
   when: ansible_distribution == "CentOS"
-  sudo: true
+  become: true
   tags: yum
   yum: name=* state=latest
 
 - name: Update apt
   when: ansible_distribution == "Ubuntu"
-  sudo: true
+  become: true
   tags: apt
   apt: upgrade=dist update_cache=yes
 
 - name: Install essential yum packages
   when: ansible_distribution == "CentOS"
-  sudo: true
+  become: true
   tags: yum
   yum: name={{ item }} state=latest
   with_items: yum_packages
 
 - name: Install essential apt packages
   when: ansible_distribution == "Ubuntu"
-  sudo: true
+  become: true
   tags: apt
   apt: name={{ item }} state=latest update_cache=yes
   with_items: apt_packages
 
 - name: Install nkf via yum
   when: ansible_distribution == "CentOS"
-  sudo: true
+  become: true
   tags: yum
   yum: name={{ nkf_repo_url }} state=present
 
 - name: Install ag via yum
   when: ansible_distribution_major_version|int == 7 and ansible_distribution == "CentOS"
-  sudo: true
+  become: true
   tags: yum
   yum: name=the_silver_searcher state=latest
 
 - name: Install ag via yum adding RPM
   when: ansible_distribution_major_version|int == 6 and ansible_distribution == "CentOS"
-  sudo: true
+  become: true
   tags: yum
   yum: name={{ ag_repo_url }} state=present
 
@@ -84,13 +84,13 @@
 
 - name: Download git-completion and git-prompt
   tags: rc
-  sudo: true
+  become: true
   get_url: url={{ item }} dest=/etc/bash_completion.d/
   with_items: git_contrib_repo_urls
 
 - name: Remove old git completion
   tags: rc
-  sudo: true
+  become: true
   file: name=/etc/bash_completion.d/git state=absent
 
 - name: Add prompt
@@ -115,7 +115,7 @@
 
 - name: Turn selinux off
   when: ansible_distribution == "CentOS"
-  sudo: true
+  become: true
   tags: selinux
   selinux: state=disabled
 
@@ -127,6 +127,6 @@
 - name: Install pip packages for ansible
   when: ansible_distribution == "CentOS"
   tags: system_python
-  sudo: true
+  become: true
   pip: name={{ item }} state=present
   with_items: pip_packages

@@ -1,43 +1,43 @@
 - name: Download jenkins repo in CentOS
   when: ansible_distribution == "CentOS"
   tags: jenkins
-  sudo: true
+  become: true
   get_url: url={{ jenkins_repo_url }} dest=/etc/yum.repos.d/jenkins.repo
 
 - name: Add apt-key
   when: ansible_distribution == "Ubuntu"
   tags: jenkins
-  sudo: true
+  become: true
   apt_key: url={{ jenkins_apt_key_url }} state=present
 
 - name: Add jenkins repo
   when: ansible_distribution == "Ubuntu"
   tags: jenkins
-  sudo: true
+  become: true
   shell: "sh -c 'echo deb http://pkg.jenkins-ci.org/debian binary/ > /etc/apt/sources.list.d/jenkins.list'"
 
 - name: Install jenkins rpm key in CentOS
   when: ansible_distribution == "CentOS"
   tags: jenkins
-  sudo: true
+  become: true
   rpm_key: key={{ jenkins_rpm_key_url }} state=present
 
 - name: Install jenkins via yum
   when: ansible_distribution == "CentOS"
   tags: jenkins
-  sudo: true
+  become: true
   yum: name=jenkins state=latest
 
 - name: Install jenkins via apt
   when: ansible_distribution == "Ubuntu"
   tags: jenkins
-  sudo: true
+  become: true
   apt: name=jenkins state=latest update_cache=yes
 
 - name: Change JENKINS_PORT in CentOS
   when: ansible_distribution == "CentOS"
   tags: jenkins
-  sudo: true
+  become: true
   replace:
     dest: /etc/sysconfig/jenkins
     regexp: "{{ item.regexp }}"
@@ -51,7 +51,7 @@
 - name: Change HTTP_PORT in Ubuntu
   when: ansible_distribution == "Ubuntu"
   tags: jenkins
-  sudo: true
+  become: true
   replace:
     dest: /etc/default/jenkins
     regexp: "{{ item.regexp }}"
@@ -62,7 +62,7 @@
 
 - name: Restart Jenkins
   tags: jenkins
-  sudo: true
+  become: true
   service: name=jenkins state=restarted enabled=yes
 
 - name: Sleep for Jenkins restarted

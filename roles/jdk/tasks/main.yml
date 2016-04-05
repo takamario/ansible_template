@@ -12,13 +12,13 @@
 
 - name: Add apt-repository for jdk
   when: ansible_distribution == "Ubuntu"
-  sudo: true
+  become: true
   tags: jdk
   apt_repository: repo=ppa:webupd8team/java state=present
 
 - name: Install jdk via yum
   when: ansible_distribution == "CentOS"
-  sudo: true
+  become: true
   tags: jdk
   yum: name=/tmp/jdk.rpm state=present
 
@@ -29,7 +29,7 @@
 
 - name: Install jdk via apt
   when: ansible_distribution == "Ubuntu"
-  sudo: true
+  become: true
   tags: jdk
   apt: name=oracle-java8-installer state=present update_cache=yes
 
@@ -46,13 +46,13 @@
 - name: Set default in Ubuntu (Adding JAVA_HOME)
   when: ansible_distribution == "Ubuntu"
   tags: jdk
-  sudo: true
+  become: true
   apt: name=oracle-java8-set-default state=present update_cache=yes
 
 - name: Add alternatives in CentOS
   when: ansible_distribution == "CentOS"
   tags: jdk
-  sudo: true
+  become: true
   shell: alternatives --install /usr/bin/{{ item }} {{ item }} /usr/java/{{ default_version }}/bin/{{ item }} 2
   with_items:
     - java
@@ -61,7 +61,7 @@
 - name: Set default java in CentOS
   when: ansible_distribution == "CentOS"
   tags: jdk
-  sudo: true
+  become: true
   shell: alternatives --set {{ item }} /usr/java/{{ default_version }}/bin/{{ item }}
   with_items:
     - java
@@ -70,7 +70,7 @@
 - name: Set default java in Ubuntu
   when: ansible_distribution == "Ubuntu"
   tags: jdk
-  sudo: true
+  become: true
   shell: update-java-alternatives -s java-8-oracle
 
 - name: Download maven
@@ -79,12 +79,12 @@
 
 - name: Create maven dir
   tags: maven
-  sudo: true
+  become: true
   file: path=/usr/local/apache-maven state=directory
 
 - name: Extract maven.tar.gz
   tags: maven
-  sudo: true
+  become: true
   unarchive: src=/tmp/maven.tar.gz dest=/usr/local/apache-maven copy=no
 
 - name: Add path to maven in CentOS

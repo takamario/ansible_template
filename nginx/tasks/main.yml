@@ -1,15 +1,15 @@
 - name: Install nginx repo
-  sudo: true
+  become: true
   tags: nginx
   yum: name={{ nginx_repo_url }} state=present
 
 - name: Install nginx
-  sudo: true
+  become: true
   tags: nginx
   yum: name=nginx state=latest
 
 - name: Put conf
-  sudo: true
+  become: true
   tags: nginx
   copy:
     src: "{{ item }}"
@@ -18,6 +18,6 @@
     - local.conf
 
 - name: Turn nginx service on
-  sudo: true
+  become: true
   tags: nginx
   service: name=nginx enabled=yes state=restarted

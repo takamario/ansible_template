@@ -1,21 +1,21 @@
 - name: Download jenkins repo
   tags: jenkins
-  sudo: true
+  become: true
   get_url: url={{ jenkins_repo_url }} dest=/etc/yum.repos.d/jenkins.repo
 
 - name: Install jenkins rpm key
   tags: jenkins
-  sudo: true
+  become: true
   rpm_key: key={{ jenkins_rpm_key_url }} state=present
 
 - name: Install jenkins
   tags: jenkins
-  sudo: true
+  become: true
   yum: name=jenkins state=latest
 
 - name: Change JENKINS_PORT
   tags: jenkins
-  sudo: true
+  become: true
   replace:
     dest: /etc/sysconfig/jenkins
     regexp: "{{ item.regexp }}"
@@ -28,5 +28,5 @@
 
 - name: Restart Jenkins
   tags: jenkins
-  sudo: true
+  become: true
   service: name=jenkins state=restarted enabled=yes

@@ -4,7 +4,7 @@
 
 - name: Extract go.tar.gz
   tags: go
-  sudo: true
+  become: true
   unarchive: src=/tmp/go.tar.gz dest=/usr/local copy=no
 
 - name: Add Path to Go in CentOS
@@ -33,12 +33,12 @@
 
 - name: Create a directory for go packages
   tags: go
-  sudo: true
+  become: true
   file: path=/usr/local/go/packages state=directory
 
 - name: Install gocode
   tags: go
-  sudo: true
+  become: true
   shell: 'GOPATH=/usr/local/go/packages /usr/local/go/bin/go get -u github.com/nsf/gocode'
 
 - name: Check gocode symlinks
@@ -54,15 +54,15 @@
 
 - name: Install golint
   tags: go
-  sudo: true
+  become: true
   shell: 'GOPATH=/usr/local/go/packages /usr/local/go/bin/go get -u github.com/golang/lint'
 
 - name: Install godef
   tags: go
-  sudo: true
+  become: true
   shell: 'GOPATH=/usr/local/go/packages /usr/local/go/bin/go get -u code.google.com/p/rog-go/exp/cmd/godef'
 
 - name: Install godoc
   tags: go
-  sudo: true
+  become: true
   shell: 'GOPATH=/usr/local/go/packages /usr/local/go/bin/go get -u golang.org/x/tools/cmd/godoc'

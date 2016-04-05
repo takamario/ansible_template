@@ -1,11 +1,11 @@
 - name: Install nginx repo with RPM
   when: ansible_distribution == "CentOS"
-  sudo: true
+  become: true
   tags: nginx
   yum: name={{ nginx_repo_url }} state=present
 
 - name: Install nginx dependencies via yum
-  sudo: true
+  become: true
   when: ansible_distribution_major_version|int == 6 and ansible_distribution == "CentOS"
   tags: nginx
   yum: name={{ item }} state=latest
@@ -13,18 +13,18 @@
 
 - name: Install nginx via yum
   when: ansible_distribution == "CentOS"
-  sudo: true
+  become: true
   tags: nginx
   yum: name=nginx state=latest
 
 - name: Install nginx via apt
   when: ansible_distribution == "Ubuntu"
-  sudo: true
+  become: true
   tags: nginx
   apt: name=nginx state=latest update_cache=yes
 
 - name: Put conf
-  sudo: true
+  become: true
   tags: nginx
   copy:
     src: "{{ inventory_hostname }}/{{ item }}"
@@ -32,6 +32,6 @@
   with_items: nginx_conf_files
 
 - name: Turn nginx service on
-  sudo: true
+  become: true
   tags: nginx
   service: name=nginx enabled=yes state=restarted

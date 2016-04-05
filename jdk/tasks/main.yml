@@ -10,7 +10,7 @@
     url: "{{ jdk_repo_url }}"
 
 - name: Install jdk
-  sudo: true
+  become: true
   tags: jdk
   yum: name=/tmp/jdk.rpm state=present
 
@@ -24,7 +24,7 @@
 
 - name: Add alternatives
   tags: jdk
-  sudo: true
+  become: true
   shell: alternatives --install /usr/bin/{{ item }} {{ item }} /usr/java/{{ default_version }}/bin/{{ item }} 2
   with_items:
     - java
@@ -32,7 +32,7 @@
 
 - name: Set default java
   tags: jdk
-  sudo: true
+  become: true
   shell: alternatives --set {{ item }} /usr/java/{{ default_version }}/bin/{{ item }}
   with_items:
     - java
@@ -44,12 +44,12 @@
 
 - name: Create maven dir
   tags: maven
-  sudo: true
+  become: true
   file: path=/usr/local/apache-maven state=directory
 
 - name: Extract maven.tar.gz
   tags: maven
-  sudo: true
+  become: true
   unarchive: src=/tmp/maven.tar.gz dest=/usr/local/apache-maven copy=no
 
 - name: Add path to maven

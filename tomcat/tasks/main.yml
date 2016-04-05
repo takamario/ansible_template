@@ -4,12 +4,12 @@
 
 - name: Create tomcat dir
   tags: tomcat
-  sudo: true
+  become: true
   file: path=/usr/local/apache-tomcat state=directory
 
 - name: Extract tomcat.tar.gz
   tags: tomcat
-  sudo: true
+  become: true
   unarchive: src=/tmp/tomcat.tar.gz dest=/usr/local/apache-tomcat copy=no
 
 - name: Add CATALINA_HOME
@@ -22,7 +22,7 @@
 
 - name: Extract common-daemon
   tags: tomcat
-  sudo: true
+  become: true
   unarchive: >
     src=/usr/local/apache-tomcat/{{ tomcat_version_name }}/bin/commons-daemon-native.tar.gz
     dest=/usr/local/apache-tomcat/{{ tomcat_version_name }}/bin
@@ -30,7 +30,7 @@
 
 - name: Compile jsvc
   tags: tomcat
-  sudo: true
+  become: true
   shell: "{{ item }}"
   with_items:
     - cd /usr/local/apache-tomcat/{{ tomcat_version_name }}/bin/commons-daemon-1.0.15-native-src/unix && ./configure --with-java=/usr/java/default
@@ -38,10 +38,10 @@
 
 - name: Copy jsvc
   tags: tomcat
-  sudo: true
+  become: true
   shell: cp /usr/local/apache-tomcat/{{ tomcat_version_name }}/bin/commons-daemon-1.0.15-native-src/unix/jsvc /usr/local/apache-tomcat/{{ tomcat_version_name }}/bin
 
 - name: Add tomcat service
   tags: tomcat
-  sudo: true
+  become: true
   service: name=tomcat state=restarted enabled=yes
